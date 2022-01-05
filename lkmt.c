@@ -36,7 +36,7 @@ static irq_handler_t gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_
  * @brief This function is called when the module is loaded into the kernel 
  * 
  */
-static int __init module_init(void) {
+static int __init Module_Init(void) {
     pr_info("%s\n", __func__);
     printk("irq test");
     printk("qpio_irq: Loading module...\n");
@@ -109,7 +109,7 @@ static int __init module_init(void) {
  * @brief This function is called when the module is removed from the kernel
  * 
  */
-static void __exit module_exit(void) {
+static void __exit Module_Exit(void) {
     printk ("gpio_irq: Unloading module...");
     gpio_set_value(Led, 0);
     gpio_unexport(Led);
@@ -119,5 +119,5 @@ static void __exit module_exit(void) {
     printk("gpio_irq: Module Unloaded");
 }
 
-module_init(module_init);
-module_exit(module_exit);
+module_init(Module_Init);
+module_exit(Module_Exit);
