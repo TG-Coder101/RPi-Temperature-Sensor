@@ -135,10 +135,10 @@ def main():
 	GPIO.set_mode(GPIO.BCM)
 	#Assign GPIO pins
 	ledR = 23
-	ledG = 20
+	ledY = 20
 	ledB = 21
 	GPIO.setup(ledR, GPIO.OUT)
-	GPIO.setup(ledG, GPIO.OUT)
+	GPIO.setup(ledY, GPIO.OUT)
 	GPIO.setup(ledB, GPIO.OUT)
 
 	try:
@@ -151,17 +151,17 @@ def main():
 				
 				cTemp = float(celsius())
 				if float(cTemp) >= 19 and float(cTemp) <= 23:
-					GPIO.output(ledG, GPIO.HIGH)
+					GPIO.output(ledY, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
 					GPIO.output(ledR, GPIO.LOW)
 				elif float(cTemp) < 19:
 					GPIO.output(ledB, GPIO.HIGH)
-					GPIO.output(ledG, GPIO.LOW)
+					GPIO.output(ledY, GPIO.LOW)
 					GPIO.output(ledR, GPIO.LOW)
 				elif float(cTemp) > 24:
 					GPIO.output(ledR, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledG, GPIO.LOW)
+					GPIO.output(ledY, GPIO.LOW)
 
 			elif args.fahrenheit:
 
@@ -170,22 +170,22 @@ def main():
 
 				fTemp = float(fahrenheit())
 				if float(fTemp) >= 65 and float(fTemp) <= 75:
-					GPIO.output(ledG, GPIO.HIGH)
+					GPIO.output(ledY, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
 					GPIO.output(ledR, GPIO.LOW)
 				elif float(fTemp) < 64:
 					GPIO.output(ledB, GPIO.HIGH)
-					GPIO.output(ledG, GPIO.LOW)
+					GPIO.output(ledY, GPIO.LOW)
 					GPIO.output(ledR, GPIO.LOW)
 				elif float(fTemp) > 76:
 					GPIO.output(ledR, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledG, GPIO.LOW)
+					GPIO.output(ledY, GPIO.LOW)
 
 			time.sleep(1.0)		
 	except KeyboardInterrupt:
 		GPIO.output(ledB, GPIO.LOW)
-		GPIO.output(ledG, GPIO.LOW)
+		GPIO.output(ledY, GPIO.LOW)
 		GPIO.output(ledR, GPIO.LOW)
 		GPIO.cleanup()		
 	
