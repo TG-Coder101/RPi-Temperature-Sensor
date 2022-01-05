@@ -25,8 +25,8 @@ static irq_handler_t gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_
 
     state = !State; /* Toggle LED */
     gpio_set_value(Button, Led);
-    printk(KERN_INFO "Led state is: [%d] ", gpio_get_value(Led))
-    printk(KERN_INFO "Button state is: [%d] ", gpio_get_value(Button))
+    printk(KERN_INFO "Led state is: [%d] ", gpio_get_value(Led));
+    printk(KERN_INFO "Button state is: [%d] ", gpio_get_value(Button));
 
     counter++;
     return (irq_handler_t) IRQ_HANDLED;
@@ -61,7 +61,7 @@ static int __init module_init(void) {
     }
      
     if(gpio_set_debounce(Button, 500)) {
-        printk("Error!\nCannot set debounce")
+        printk("Error!\nCannot set debounce");
         return -1;
     }
 
@@ -119,5 +119,5 @@ static void __exit module_exit(void) {
     printk("gpio_irq: Module Unloaded");
 }
 
-module_init(module_init)
-module_exit(module_exit)
+module_init(module_init);
+module_exit(module_exit);
