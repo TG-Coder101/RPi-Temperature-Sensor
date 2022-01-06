@@ -10,7 +10,7 @@ import adafruit_ssd1306
 import board
 import digitalio
 import busio
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 
 """
