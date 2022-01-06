@@ -13,7 +13,7 @@ try:
 	import boto3
 	import RPi.GPIO as GPIO
 	from PIL import Image, ImageDraw, ImageFont
-	print ("Modules loaded")
+	print ("Modules loaded...")
 except Exception as e:
 	print ("Error {}".format(e))
 
