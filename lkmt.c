@@ -20,7 +20,7 @@ static unsigned int counter = 0;
 static bool state = 0;
 /* variable contains pin number interrupt controller to which GPIO 17 is mapped to */
 static unsigned int irq_number;
-static unsigned bool buttonPress;
+static bool buttonPress;
 
 extern unsigned long volatile jiffies;
 unsigned long old_jiffie = 0;
