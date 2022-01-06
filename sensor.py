@@ -133,7 +133,7 @@ def main():
 	args = parse_args()
 	buttonPressed = open('/dev/tempchar').read()[0]
 
-	GPIO.set_mode(GPIO.BCM)
+	GPIO.setmode(GPIO.BCM)
 	#Assign GPIO pins
 	ledR = 23
 	ledY = 20
