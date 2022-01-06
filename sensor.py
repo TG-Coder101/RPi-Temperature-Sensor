@@ -1,17 +1,21 @@
-#module imports
-import os
-import glob
-import argparse
-import sys
-import time
+try:
+	#module imports
+	import os
+	import glob
+	import argparse
+	import time
 
-#other imports
-import adafruit_ssd1306
-import board
-import digitalio
-import busio
-import RPi.GPIO as GPIO
-from PIL import Image, ImageDraw, ImageFont
+	#other imports
+	import adafruit_ssd1306
+	import board
+	import digitalio
+	import busio
+	import boto3
+	import RPi.GPIO as GPIO
+	from PIL import Image, ImageDraw, ImageFont
+	print ("Modules loaded")
+except Exception as e:
+	print ("Error {}".format(e))
 
 """
 sensor.py
@@ -20,6 +24,8 @@ __version__ = "0.0.1"
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
+
+buttonPressed = open('/dev/tempchar').read()[0]
 
 #LCD DISPLAY
 WIDTH = 128
@@ -131,7 +137,6 @@ def fahrenheit():
 def main():
 	
 	args = parse_args()
-	buttonPressed = open('/dev/tempchar').read()[0]
 
 	GPIO.setmode(GPIO.BCM)
 	#Assign GPIO pins
