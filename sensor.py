@@ -13,7 +13,7 @@ try:
 	import boto3
 	import RPi.GPIO as GPIO
 	from PIL import Image, ImageDraw, ImageFont
-	print ("Modules loaded...")
+	print ("Modules loaded")
 except Exception as e:
 	print ("Error {}".format(e))
 
@@ -24,8 +24,6 @@ __version__ = "0.0.1"
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
-
-buttonPressed = open('/dev/tempchar').read()[0]
 
 #LCD DISPLAY
 WIDTH = 128
@@ -147,53 +145,56 @@ def main():
 	GPIO.setup(ledY, GPIO.OUT)
 	GPIO.setup(ledB, GPIO.OUT)
 
-	try:
-		while True:
-			
-			if args.celsius:
+	while True:
+		buttonPressed = open('/dev/tempchar').read()[0]
+		if buttonPressed == 1:
+			try:
+				while True:
+					
+					if args.celsius:
 
-				print(celsius()+u"\N{DEGREE SIGN}"+ "C")
-				display_text(str(celsius())+u"\N{DEGREE SIGN}"+ "C")
-				
-				cTemp = float(celsius())
-				if float(cTemp) >= 19 and float(cTemp) <= 23:
-					GPIO.output(ledY, GPIO.HIGH)
-					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledR, GPIO.LOW)
-				elif float(cTemp) < 19:
-					GPIO.output(ledB, GPIO.HIGH)
-					GPIO.output(ledY, GPIO.LOW)
-					GPIO.output(ledR, GPIO.LOW)
-				elif float(cTemp) > 24:
-					GPIO.output(ledR, GPIO.HIGH)
-					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledY, GPIO.LOW)
+						print(celsius()+u"\N{DEGREE SIGN}"+ "C")
+						display_text(str(celsius())+u"\N{DEGREE SIGN}"+ "C")
+						
+						cTemp = float(celsius())
+						if float(cTemp) >= 19 and float(cTemp) <= 23:
+							GPIO.output(ledY, GPIO.HIGH)
+							GPIO.output(ledB, GPIO.LOW)
+							GPIO.output(ledR, GPIO.LOW)
+						elif float(cTemp) < 19:
+							GPIO.output(ledB, GPIO.HIGH)
+							GPIO.output(ledY, GPIO.LOW)
+							GPIO.output(ledR, GPIO.LOW)
+						elif float(cTemp) > 24:
+							GPIO.output(ledR, GPIO.HIGH)
+							GPIO.output(ledB, GPIO.LOW)
+							GPIO.output(ledY, GPIO.LOW)
 
-			elif args.fahrenheit:
+					elif args.fahrenheit:
 
-				print(fahrenheit()+u"\N{DEGREE SIGN}"+ "F")
-				display_text(str(fahrenheit())+u"\N{DEGREE SIGN}"+ "F")	
+						print(fahrenheit()+u"\N{DEGREE SIGN}"+ "F")
+						display_text(str(fahrenheit())+u"\N{DEGREE SIGN}"+ "F")	
 
-				fTemp = float(fahrenheit())
-				if float(fTemp) >= 65 and float(fTemp) <= 75:
-					GPIO.output(ledY, GPIO.HIGH)
-					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledR, GPIO.LOW)
-				elif float(fTemp) < 64:
-					GPIO.output(ledB, GPIO.HIGH)
-					GPIO.output(ledY, GPIO.LOW)
-					GPIO.output(ledR, GPIO.LOW)
-				elif float(fTemp) > 76:
-					GPIO.output(ledR, GPIO.HIGH)
-					GPIO.output(ledB, GPIO.LOW)
-					GPIO.output(ledY, GPIO.LOW)
+						fTemp = float(fahrenheit())
+						if float(fTemp) >= 65 and float(fTemp) <= 75:
+							GPIO.output(ledY, GPIO.HIGH)
+							GPIO.output(ledB, GPIO.LOW)
+							GPIO.output(ledR, GPIO.LOW)
+						elif float(fTemp) < 64:
+							GPIO.output(ledB, GPIO.HIGH)
+							GPIO.output(ledY, GPIO.LOW)
+							GPIO.output(ledR, GPIO.LOW)
+						elif float(fTemp) > 76:
+							GPIO.output(ledR, GPIO.HIGH)
+							GPIO.output(ledB, GPIO.LOW)
+							GPIO.output(ledY, GPIO.LOW)
 
-			time.sleep(1.0)		
-	except KeyboardInterrupt:
-		GPIO.output(ledB, GPIO.LOW)
-		GPIO.output(ledY, GPIO.LOW)
-		GPIO.output(ledR, GPIO.LOW)
-		GPIO.cleanup()		
+					time.sleep(1.0)		
+			except KeyboardInterrupt:
+				GPIO.output(ledB, GPIO.LOW)
+				GPIO.output(ledY, GPIO.LOW)
+				GPIO.output(ledR, GPIO.LOW)
+				GPIO.cleanup()		
 	
 if __name__ == "__main__":
 	titleArt()
