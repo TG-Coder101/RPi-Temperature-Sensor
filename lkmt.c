@@ -5,6 +5,7 @@
 #include <linux/device.h>
 #include <linux/uaccess.h>
 #include <linux/fs.h>
+#include <linux/spinlock.h>
 #define DEVICE_NAME "tempchar"
 #define CLASS_NAME "temp"
 
@@ -21,6 +22,8 @@ static bool state = 0;
 /* variable contains pin number interrupt controller to which GPIO 17 is mapped to */
 static unsigned int irq_number;
 static bool buttonPress;
+/* spinlock to syncronise access to buttonPress */
+DEFINE_SPINLOCK(defLock);
 
 extern unsigned long volatile jiffies;
 unsigned long old_jiffie = 0;
@@ -66,6 +69,10 @@ static irq_handler_t gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_
     	gpio_set_value(Led, 0);
     }
     
+    spin_lock(&defLock);
+    buttonPress = true;
+    spin_unlock(&defLock);
+    
     old_jiffie = jiffies;
     
     printk(KERN_INFO "Led state is: [%d] \n", gpio_get_value(Led));
@@ -90,12 +97,17 @@ static int dev_open(struct inode *inodep, struct file *filep){
  */
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset) {
    
+    printk(KERN_INFO "reading now!!!\n");
     unsigned char sendByte = 0;
+    unsigned long flags;
     int error_count;
 
     if (buttonPress) {
        sendByte = 1;
+       spin_lock_irqsave(&defLock, flags);
        buttonPress = false;
+       spin_unlock_irqrestore(&defLock, flags);
+       printk(KERN_INFO "button has been pressed1\n");
     }
     copy_to_user(buffer, &sendByte, 1);
 
@@ -107,6 +119,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
       printk(KERN_INFO "TempChar: Failed to send %d characters to the user\n", error_count);
       return -EFAULT;              // Failed -- return a bad address message (i.e. -14)
     }
+    return 1;
 }
 
 /** @brief This function is called whenever the device is being written to from user space i.e.
