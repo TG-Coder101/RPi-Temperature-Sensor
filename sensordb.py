@@ -11,6 +11,7 @@ os.system('modprobe w1-therm')
 base_dir = '/sys/bus/w1/devices/'
 therm_folder = glob.glob(base_dir + '28*')[0] 
 therm_file = therm_folder + '/w1_slave' 
+dynamodb = boto3.resource('dynamodb',region_name='us-east-1')
 
 class MyDb(object):
 
@@ -40,14 +41,7 @@ class MyDb(object):
 				'dFahrenheit':dFahrenheit
 			}
 		)}
-	"""
-	def delete(self, Sensor_Id=''):
-		self.table.delete_item(
-			Key={
-				'Sensor_Id': Sensor_Id
-			}
-		)
-	"""
+
 	def describe_table(self):
 		response = self.client.describe_table(
 			TableName='Sensor'
@@ -89,12 +83,13 @@ def fahrenheit():
 		return temp_f
 
 def main():
-    global counter
-    threading.Timer(interval=10, function=main).start()			
-    obj = MyDb()
-    obj.put(Sensor_Id=str(counter), dCelsius = str(celsius()), dFahrenheit = str(fahrenheit()))
-    counter = counter + 1
-    print ("Uploaded to dynamodb C:{},F:{} ".format(celsius(), fahrenheit()))
+	global counter
+	while True:
+		threading.Timer(interval=10, function=main).start()			
+		obj = MyDb()
+		obj.put(Sensor_Id=str(counter), dCelsius = str(celsius()), dFahrenheit = str(fahrenheit()))
+		counter = counter + 1
+		print ("Uploaded to dynamodb C:{},F:{} ".format(celsius(), fahrenheit()))
 
 if __name__ == "__main__":
     global counter
