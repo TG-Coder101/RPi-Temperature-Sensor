@@ -18,7 +18,7 @@ class MyDb(object):
 	def __init__(self, Table_Name='DS18'):
 
 		self.Table_Name=Table_Name
-		self.db = boto3.resource('dynamodb', region_name='us-east-1')
+		self.db = boto3.resource('dynamodb', region_name='us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com)
 		self.table = self.db.Table(Table_Name)
 		self.client = boto3.client('dynamodb')
 
@@ -36,7 +36,7 @@ class MyDb(object):
 	def put(self, Sensor_Id='' , dCelsius='', dFahrenheit=''):
 		{self.table.put_item(
 			Item={
-				'Sensor_Id':Sensor_Id,
+				'id':Sensor_Id,
 				'dCelsius':dCelsius,
 				'dFahrenheit':dFahrenheit
 			}
