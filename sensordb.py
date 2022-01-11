@@ -11,14 +11,14 @@ os.system('modprobe w1-therm')
 base_dir = '/sys/bus/w1/devices/'
 therm_folder = glob.glob(base_dir + '28*')[0] 
 therm_file = therm_folder + '/w1_slave' 
-dynamodb = boto3.resource('dynamodb',region_name='us-east-1')
+#dynamodb = boto3.resource('dynamodb')
 
 class MyDb(object):
 
 	def __init__(self, Table_Name='DS18'):
 
 		self.Table_Name=Table_Name
-		self.db = boto3.resource('dynamodb')
+		self.db = boto3.resource('dynamodb', region_name='us-east-1')
 		self.table = self.db.Table(Table_Name)
 		self.client = boto3.client('dynamodb')
 
