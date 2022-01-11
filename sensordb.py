@@ -11,16 +11,14 @@ os.system('modprobe w1-therm')
 base_dir = '/sys/bus/w1/devices/'
 therm_folder = glob.glob(base_dir + '28*')[0] 
 therm_file = therm_folder + '/w1_slave' 
-#dynamodb = boto3.resource('dynamodb')
 
 class MyDb(object):
 
 	def __init__(self, Table_Name='DS18'):
 
 		self.Table_Name=Table_Name
-		self.db = boto3.resource('dynamodb', region_name='us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com)
+		self.db = boto3.resource('dynamodb', region_name = 'us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com)
 		self.table = self.db.Table(Table_Name)
-		self.client = boto3.client('dynamodb')
 
 	@property
 	def get(self):
@@ -33,18 +31,17 @@ class MyDb(object):
 		return response
 	
 	#put meta
-	def put(self, Sensor_Id='' , dCelsius='', dFahrenheit=''):
-		{self.table.put_item(
+	def put(self, Sensor_Id='' , dbCelsiusVal=''):
+		self.table.put_item(
 			Item={
 				'id':Sensor_Id,
-				'dCelsius':dCelsius,
-				'dFahrenheit':dFahrenheit
+				'CelsiusVal':dbCelsiusVal
 			}
-		)}
+		)
 
 	def describe_table(self):
 		response = self.client.describe_table(
-			TableName='Sensor'
+			TableName='DS18'
 		)
 		return response
     
@@ -84,12 +81,14 @@ def fahrenheit():
 
 def main():
 	global counter
+	cDB = celsius()
+	fDB = fahrenheit()
 	while True:
-		threading.Timer(interval=10, function=main).start()			
+		#threading.Timer(interval=10, function=main).start()			
 		obj = MyDb()
-		obj.put(Sensor_Id=str(counter), dCelsius = str(celsius()), dFahrenheit = str(fahrenheit()))
+		obj.put(Sensor_Id=str(counter), dbCelsiusVal = str(cDB))
 		counter = counter + 1
-		print ("Uploaded to dynamodb C:{},F:{} ".format(celsius(), fahrenheit()))
+		print ("Uploaded to dynamodb C:{} ".format(cDB))
 
 if __name__ == "__main__":
     global counter
