@@ -1,5 +1,5 @@
-# RPI-Temperature-Sensor
-A RPI project for the CMP 408 module
+# RPi-Temperature-Sensor
+A RPi project for the CMP 408 module
 
 For sensor.py
 Use -c/ -celsius for displaying results in Celsius
