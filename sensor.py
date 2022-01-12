@@ -43,7 +43,7 @@ def titleArt():
 	cprint(colored(f.renderText('RPi Thermometer'), 'cyan'))
 	print(r"""					By Tom Gardner
 
-	An RPI Thermometer with Cloud functionality
+	An Temperature Sensor with Cloud functionality
 
 	Use -c for Celsius, -f for Fahrenheit, -d to upload data to DynamoDB
 	""" )
