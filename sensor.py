@@ -48,7 +48,7 @@ def titleArt():
 	Use -c for Celsius, -f for Fahrenheit, -d to upload data to DynamoDB
 	""" )
 	print ("    	Version ",__version__)
-
+#dynamodb class
 class MyDb(object):
 
 	def __init__(self, Table_Name='DS18'):
@@ -82,7 +82,7 @@ class MyDb(object):
 			TableName='DS18'
 		)
 		return response
-    
+#displays text on Adafruit LCD display   
 def display_text(text):
 	#Clear Display
 	oled.fill(0)
