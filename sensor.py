@@ -23,7 +23,7 @@ except Exception as e:
 """
 sensor.py
 """
-__version__ = "0.0.1"
+__version__ = "0.2"
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
