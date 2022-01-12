@@ -36,14 +36,12 @@ BORDER = 5
 i2c = board.I2C()
 oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3c)
 
-
-
 #Gimmick Title Art
 def titleArt():
 
 	f = Figlet(font="slant")
 	cprint(colored(f.renderText('RPi Thermometer'), 'cyan'))
-	print(r"""										 		By Tom Gardner
+	print(r"""					By Tom Gardner
 
 	An RPI Thermometer with Cloud functionality
 
@@ -234,7 +232,6 @@ def main():
 		GPIO.output(ledR, GPIO.LOW)
 		GPIO.cleanup()		
 	
-
 if __name__ == "__main__":
 	global counter
 	counter = 0
