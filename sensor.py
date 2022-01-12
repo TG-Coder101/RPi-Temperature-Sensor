@@ -8,11 +8,14 @@ try:
 	#other imports
 	import adafruit_ssd1306
 	import board
-	import digitalio
 	import busio
 	import boto3
+	import digitalio
+	import pyfiglet
 	import RPi.GPIO as GPIO
 	from PIL import Image, ImageDraw, ImageFont
+	from termcolor import colored, cprint
+	from pyfiglet import Figlet
 	print ("Modules loaded")
 except Exception as e:
 	print ("Error {}".format(e))
@@ -33,23 +36,55 @@ BORDER = 5
 i2c = board.I2C()
 oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3c)
 
+
+
 #Gimmick Title Art
 def titleArt():
 
-    print(r"""
-	   ___  ___  ____  ________                                __         
-	  / _ \/ _ \/  _/ /_  __/ /  ___ ______ _  ___  __ _  ___ / /____ ____
-	 / , _/ ___// /    / / / _ \/ -_) __/  ' \/ _ \/  ' \/ -_) __/ -_) __/
-	/_/|_/_/  /___/   /_/ /_//_/\__/_/ /_/_/_/\___/_/_/_/\__/\__/\__/_/   
-													
-													By Tom Gardner
+	f = Figlet(font="slant")
+	cprint(colored(f.renderText('RPi Thermometer'), 'cyan'))
+	print(r"""										 		By Tom Gardner
 
 	An RPI Thermometer with Cloud functionality
 
-	Use -c for Celsius and -f for Fahrenheit
-    """ )
-    print ("    Version ",__version__)
+	Use -c for Celsius, -f for Fahrenheit, -d to upload data to DynamoDB
+	""" )
+	print ("    	Version ",__version__)
 
+class MyDb(object):
+
+	def __init__(self, Table_Name='DS18'):
+
+		self.Table_Name=Table_Name
+		self.db = boto3.resource('dynamodb', region_name = 'us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com")
+		self.table = self.db.Table(Table_Name)
+
+	@property
+	def get(self):
+
+		response = self.table.get_item(
+			Key = {
+				'Sensor_Id':"1"
+			}
+		)	
+		return response
+	
+	#put meta
+	def put(self, Sensor_Id='', dbCelsiusVal='', dbFahrenheitVal='',):
+		self.table.put_item(
+			Item={
+				'id':Sensor_Id,
+				'CelsiusVal':dbCelsiusVal,
+				'FahrenheitVal':dbFahrenheitVal
+			}
+		)
+
+	def describe_table(self):
+		response = self.client.describe_table(
+			TableName='DS18'
+		)
+		return response
+    
 def display_text(text):
 	#Clear Display
 	oled.fill(0)
@@ -99,12 +134,12 @@ def read_temperature():
 	return temps
 
 def parse_args():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("-c", "--celsius", help="output temperature in Celsius", action="store_true")
-	parser.add_argument("-f", "--fahrenheit", help="output temperature in Fahrenheit", action="store_true")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--celsius", help="output temperature in Celsius", action="store_true")
+    parser.add_argument("-f", "--fahrenheit", help="output temperature in Fahrenheit", action="store_true") 
+    parser.add_argument("-d", "--dynamo", help="upload temperatures to DynamoDb", action="store_true")
+    return parser.parse_args()
 
-	return parser.parse_args()
-	
 #Convert temperature into Celsius
 def celsius():
 	temps = read_temperature()
@@ -131,10 +166,10 @@ def fahrenheit():
 		temp_f = str(round(temp_f, 1))
 		return temp_f
 
-#Main Function		
 def main():
 	
 	args = parse_args()
+	global counter
 
 	GPIO.setmode(GPIO.BCM)
 	#Assign GPIO pins
@@ -184,6 +219,14 @@ def main():
 					GPIO.output(ledR, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
 					GPIO.output(ledY, GPIO.LOW)
+
+			elif args.dynamo:
+				obj = MyDb()
+				obj.put(Sensor_Id=str(counter), dbCelsiusVal = str(celsius()), dbFahrenheitVal = str(fahrenheit()))
+				counter = counter + 1
+				print ("Data uploaded to DynamoDB C: {} ".format(celsius()+u"\N{DEGREE SIGN}"+ "C"))
+				print ("Data uploaded to DynamoDB F: {} ".format(fahrenheit()+u"\N{DEGREE SIGN}"+ "F"))
+				time.sleep(1.0)
 	
 	except KeyboardInterrupt:
 		GPIO.output(ledB, GPIO.LOW)
@@ -191,6 +234,9 @@ def main():
 		GPIO.output(ledR, GPIO.LOW)
 		GPIO.cleanup()		
 	
+
 if __name__ == "__main__":
+	global counter
+	counter = 0
 	titleArt()
 	main()	
