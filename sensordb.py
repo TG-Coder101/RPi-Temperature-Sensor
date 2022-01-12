@@ -17,7 +17,7 @@ class MyDb(object):
 	def __init__(self, Table_Name='DS18'):
 
 		self.Table_Name=Table_Name
-		self.db = boto3.resource('dynamodb', region_name = 'us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com)
+		self.db = boto3.resource('dynamodb', region_name = 'us-east-1', endpoint_url="https://dynamodb.us-east-1.amazonaws.com")
 		self.table = self.db.Table(Table_Name)
 
 	@property
