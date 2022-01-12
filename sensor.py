@@ -130,7 +130,7 @@ def read_temperature():
 	f.close()
 	
 	return temps
-
+#Arguments for Argparse
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--celsius", help="output temperature in Celsius", action="store_true")
@@ -163,7 +163,7 @@ def fahrenheit():
 		temp_f = int(temp_string) / 1000.0 * 9.0 / 5.0 + 32.0 #Temp string is the sensor output
 		temp_f = str(round(temp_f, 1))
 		return temp_f
-
+#Main function
 def main():
 	
 	args = parse_args()
@@ -180,6 +180,7 @@ def main():
 
 	try:
 		while True:
+			#prints celsius
 			if args.celsius:
 
 				print(celsius()+u"\N{DEGREE SIGN}"+ "C")
@@ -198,7 +199,7 @@ def main():
 					GPIO.output(ledR, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
 					GPIO.output(ledY, GPIO.LOW)
-
+			#prints fahrenheit
 			elif args.fahrenheit:
 
 				print(fahrenheit()+u"\N{DEGREE SIGN}"+ "F")
@@ -217,7 +218,7 @@ def main():
 					GPIO.output(ledR, GPIO.HIGH)
 					GPIO.output(ledB, GPIO.LOW)
 					GPIO.output(ledY, GPIO.LOW)
-
+			#uploads data to dynamodb
 			elif args.dynamo:
 				obj = MyDb()
 				obj.put(Sensor_Id=str(counter), dbCelsiusVal = str(celsius()), dbFahrenheitVal = str(fahrenheit()))
