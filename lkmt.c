@@ -107,7 +107,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
        spin_lock_irqsave(&defLock, flags);
        buttonPress = false;
        spin_unlock_irqrestore(&defLock, flags);
-       printk(KERN_INFO "button has been pressed1\n");
+       printk(KERN_INFO "button has been pressed\n");
     }
     copy_to_user(buffer, &sendByte, 1);
 
