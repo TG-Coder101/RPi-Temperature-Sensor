@@ -41,7 +41,7 @@ def titleArt():
 
 	f = Figlet(font="slant")
 	cprint(colored(f.renderText('RPi Thermometer'), 'cyan'))
-	print(r"""					By Tom Gardner
+	print(r"""					By
 
 	An Temperature Sensor with Cloud functionality
 
