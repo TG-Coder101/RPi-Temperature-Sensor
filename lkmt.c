@@ -11,7 +11,7 @@
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Tom Gardner");
+MODULE_AUTHOR("");
 MODULE_DESCRIPTION("An LKM for a gpio interrupt that lights up an LED");
 MODULE_VERSION("0.1");
 
