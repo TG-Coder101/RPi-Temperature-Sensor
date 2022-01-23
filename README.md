@@ -8,4 +8,5 @@ Use -c/ -celsius for displaying results in Celsius
 Use -f/ -fahrenheit for displaying results in Fahrenheit
 
 Use -d/ -dynamodb for uploading results to DynamoDB
+
 --------
